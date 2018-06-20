@@ -1,95 +1,61 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
-  </div>
+  <swiper :options="swiperOption" ref="mySwiper">
+    <swiper-slide class="swiper_slide"  v-for="(swiperItem,index) in indexData" :key="index">
+      <a href="" class="swiper_a" :style="{height:fullHeight + 'px',backgroundImage:'url(http://shenbo.artup.com/p'+swiperItem.showPic+')'}"></a>
+    </swiper-slide>
+    <div class="swiper-pagination" slot="pagination"></div>
+  </swiper>
 </template>
-
 <script>
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
-  name: 'HelloWorld',
+  name: 'carrousel',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      swiperOption: {
+        // 所有配置均为可选（同Swiper配置）
+        initialSlide: 0,
+        pagination: '.swiper-pagination',
+        loop: true,
+        speed: 400,
+        direction: 'horizontal',
+        paginationClickable: true,
+        autoplay: 3000,
+        autoplayDisableOnInteraction: false,
+        observer: true,
+        observeParents: true
+      },
+      fullHeight: document.documentElement.clientHeight,
+      fullWidth: document.documentElement.clientWidth,
+      indexData: []
     }
+  },
+  components: {
+    swiper,
+    swiperSlide
+  },
+  methods: {
+    tabHandle(idx) {
+      this.ActiveIndex = idx
+      this.ActiveI = idx
+    }
+  },
+  computed: {
+    mySwiper() {
+      return this.$refs.mySwiper.swiper
+    }
+  },
+  mounted() {
+     const that = this
+    window.onresize = () => {
+      return (() => {
+        window.fullHeight = document.documentElement.clientHeight
+        that.fullHeight = window.fullHeight
+      })()
+    }
+    this.axios.get('login/webService/getLmDataJson?lmType=L0101&pageSize=20').then((res) => {
+      this.indexData = res.data.entitys
+    })
   }
 }
 </script>
@@ -99,15 +65,24 @@ export default {
   h1, h2 {
     font-weight: normal;
   }
-  ul {
-    list-style-type: none;
-    padding: 0;
+ .hello{
+   margin-top:80px;
+ }
+ .tablist{
+    position:relative;
+    display:inline-block;
+    height:100px;
+ }
+  input{
+   height:30px;
+   width:200px;
+    border:1px solid #dddddd;
+    font-size:24px;
   }
-  li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-  a {
-    color: #42b983;
+  .swiper_a{
+    display:block;
+    background-size:auto 100%;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 </style>

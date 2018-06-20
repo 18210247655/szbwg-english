@@ -23,7 +23,7 @@ const createLintingRule = () => ({
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './src/main.js'
+    app: ["babel-polyfill", "./src/main.js"]
   },
   output: {
     path: config.build.assetsRoot,
@@ -75,6 +75,10 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {
+        test: /\.less$/,
+        loader: 'style-loader!css-loader!less-loader'
       }
     ]
   },
